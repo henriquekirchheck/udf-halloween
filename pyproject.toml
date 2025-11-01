@@ -1,0 +1,27 @@
+[project]
+name = "udf-halloween"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [{ name = "Henrique Kirch Heck", email = "me@henriquekh.dev.br" }]
+requires-python = ">=3.13"
+dependencies = [
+    "pygame",
+]
+
+[project.scripts]
+bullet-cemitary = "bullet_cemitary:main"
+
+[build-system]
+requires = ["uv_build>=0.9.7,<0.10.0"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-name = ["bullet_cemitary"]
+
+[tool.uv.extra-build-dependencies]
+pygame = ["setuptools"]
+
+[tool.ruff]
+select = ["ALL"]
+ignore = ["D", "T201"]
