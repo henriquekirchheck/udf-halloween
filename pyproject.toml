@@ -6,7 +6,8 @@ readme = "README.md"
 authors = [{ name = "Henrique Kirch Heck", email = "me@henriquekh.dev.br" }]
 requires-python = ">=3.14"
 dependencies = [
-    "pygame",
+    "numpy>=2.3.4",
+    "pygame-ce",
 ]
 
 [project.scripts]
@@ -19,9 +20,9 @@ build-backend = "uv_build"
 [tool.uv.build-backend]
 module-name = ["bullet_cemitary"]
 
-[tool.uv.extra-build-dependencies]
-pygame = ["setuptools"]
+[tool.uv.sources]
+pygame-ce = { git = "ssh://git@github.com/pygame-community/pygame-ce.git", tag = "2.5.6" }
 
 [tool.ruff]
 select = ["ALL"]
-ignore = ["D", "T201", "TC002", "ERA001"]
+ignore = ["D", "T201", "TC002", "ERA001", "C901"]

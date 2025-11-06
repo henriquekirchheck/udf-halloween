@@ -17,16 +17,22 @@
       {
         devShells = {
           default = pkgs.mkShell {
-            packages = [
-              pkgs.python3
-              pkgs.uv
+            nativeBuildInputs = with pkgs; [
+              pkg-config
+              uv
             ];
 
             buildInputs = with pkgs; [
-              sdl2-compat
               sdl3
-              sdl3-image
-              sdl3-ttf
+              sdl2-compat
+              SDL2_gfx
+              SDL2_image
+              SDL2_ttf
+              SDL2_sound
+              SDL2_mixer
+              freetype
+              portmidi
+              python3
               xorg.libX11
             ];
 
