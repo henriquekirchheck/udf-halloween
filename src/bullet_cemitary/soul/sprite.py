@@ -4,22 +4,35 @@ from typing import Literal, final, override
 import numpy as np
 import pygame
 
-from bullet_cemitary.engine.asset_loader import load_image
+from bullet_cemitary.engine.asset_loader import load_audio, load_image
 
 SQRT2 = math.sqrt(2)
 
 
 @final
 class SoulSprite(pygame.sprite.Sprite):
-    health: int
+    health: float
+    _invencibility: int = 0
     _directions = np.zeros(2)
-    _slowed: bool = True
+    _slowed: bool = False
     _position = np.zeros(2)
+
+    _original: pygame.Surface
+    _blink: pygame.Surface
 
     def __init__(self) -> None:
         pygame.sprite.Sprite.__init__(self)
-        self.image: pygame.Surface = load_image("soul/heart.webp", alpha=True)
+
+        self._original = load_image("soul/heart.webp", alpha=True)
+
+        self.image: pygame.Surface = self._original.copy()
         self.rect: pygame.Rect = self.image.get_rect()
+
+        self._blink = pygame.Surface(self.rect.size)
+        self._blink.set_colorkey((0, 0, 0))
+
+        self._hurt = load_audio("soul/snd_hurt1.wav")
+
         self.health = 20
 
     @override
@@ -31,6 +44,14 @@ class SoulSprite(pygame.sprite.Sprite):
         self._position += move
         self.rect.x = self._position[0]
         self.rect.y = self._position[1]
+
+        if self._invencibility % 2:
+            self.image = self._blink
+        else:
+            self.image = self._original
+
+        if self._invencibility > 0:
+            self._invencibility = self._invencibility - 1
 
     def event(self, event: pygame.Event) -> None:
         if event.type in (pygame.KEYDOWN, pygame.KEYUP):
@@ -54,6 +75,14 @@ class SoulSprite(pygame.sprite.Sprite):
                     self._directions[0] -= -1
                 if key == pygame.K_RIGHT:
                     self._directions[0] -= 1
+
+    def collision(self, sprite: pygame.sprite.Sprite) -> None:
+        if sprite.rect and self._invencibility == 0:
+            area = ((sprite.rect.w) * (sprite.rect.h)) / 700
+            print(area)
+            self.health -= int(20 - area)
+            self._invencibility = 20
+            _ = self._hurt.play()
 
 
 @final

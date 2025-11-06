@@ -5,10 +5,7 @@ description = "Add your description here"
 readme = "README.md"
 authors = [{ name = "Henrique Kirch Heck", email = "me@henriquekh.dev.br" }]
 requires-python = ">=3.14"
-dependencies = [
-    "numpy>=2.3.4",
-    "pygame-ce",
-]
+dependencies = ["numpy>=2.3.4", "pygame-ce"]
 
 [project.scripts]
 bullet-cemitary = "bullet_cemitary:main"
@@ -25,4 +22,4 @@ pygame-ce = { git = "ssh://git@github.com/pygame-community/pygame-ce.git", tag =
 
 [tool.ruff]
 select = ["ALL"]
-ignore = ["D", "T201", "TC002", "ERA001", "C901"]
+ignore = ["D", "T201", "TC002", "ERA001", "C901", "FBT003"]

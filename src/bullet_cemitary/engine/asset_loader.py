@@ -17,3 +17,7 @@ def load_image(
 
 def load_audio(path: LiteralString) -> pygame.Sound:
     return pygame.mixer.Sound(ASSET_DIR / path)
+
+
+def load_font(path: LiteralString) -> pygame.Font:
+    return pygame.font.Font(ASSET_DIR / path)
