@@ -3,9 +3,9 @@ from typing import final, override
 
 import pygame
 
-from bullet_cemitary.battle import BattleScene
 from bullet_cemitary.engine import scene
 from bullet_cemitary.engine.scene import Scene
+from bullet_cemitary.scenes.battle import BattleScene
 
 
 @final
