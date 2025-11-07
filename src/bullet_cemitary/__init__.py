@@ -10,6 +10,8 @@ from bullet_cemitary.engine.scene import Scene
 
 @final
 class Main(Scene):
+    CHANGE_SCENE_EVENT = pygame.event.custom_type()
+
     scene: Scene
 
     @override
@@ -28,17 +30,26 @@ class Main(Scene):
 
     @override
     def event(self, event: pygame.Event) -> None:
-        self.scene.event(event)
+        match event.type:
+            case pygame.QUIT:
+                pygame.quit()
+                sys.exit(0)
+            case pygame.KEYDOWN if event.key == pygame.K_ESCAPE:  # pyright: ignore[reportAny]
+                pygame.quit()
+                sys.exit(0)
 
-        if (
-            event.type == pygame.KEYDOWN
-            and event.key == pygame.K_RETURN  # pyright: ignore[reportAny]
-            and event.mod & pygame.KMOD_ALT  # pyright: ignore[reportAny]
-        ):
-            _ = pygame.display.toggle_fullscreen()
-        if event.type == pygame.QUIT:
-            pygame.quit()
-            sys.exit(0)
+            case pygame.KEYDOWN if (
+                event.key == pygame.K_RETURN and event.mod & pygame.KMOD_ALT  # pyright: ignore[reportAny]
+            ):
+                _ = pygame.display.toggle_fullscreen()
+
+            case self.CHANGE_SCENE_EVENT:
+                self.scene = event.scene  # pyright: ignore[reportAny]
+
+            case _:
+                pass
+
+        self.scene.event(event)
 
 
 def main() -> None:
