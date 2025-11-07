@@ -34,7 +34,7 @@ def runner(scene_class: Callable[[pygame.Surface], Scene]) -> None:
     delta = 0.0
 
     screen = pygame.display.set_mode(
-        (960, 720),
+        (640, 480),
         pygame.SCALED,
     )
 
