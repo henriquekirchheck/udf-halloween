@@ -1,16 +1,20 @@
 import math
-from typing import Literal, final, override
+from typing import TYPE_CHECKING, Literal, final, override
 
 import numpy as np
 import pygame
 
 from bullet_cemitary.engine.asset_loader import load_audio, load_image
+from bullet_cemitary.engine.sprite import Sprite
+
+if TYPE_CHECKING:
+    from bullet_cemitary.bullets.sprite import BulletSprite
 
 SQRT2 = math.sqrt(2)
 
 
 @final
-class SoulSprite(pygame.sprite.Sprite):
+class SoulSprite(Sprite):
     health: float
     _invencibility: int = 0
     _directions = np.zeros(2)
@@ -21,7 +25,7 @@ class SoulSprite(pygame.sprite.Sprite):
     _blink: pygame.Surface
 
     def __init__(self) -> None:
-        pygame.sprite.Sprite.__init__(self)
+        Sprite.__init__(self)
 
         self._original = load_image("soul/heart.webp", alpha=True)
 
@@ -36,15 +40,18 @@ class SoulSprite(pygame.sprite.Sprite):
         self.health = 20
 
     @override
-    def update(self) -> None:
-        speed = (0.5 if self._slowed else 1.0) * 8.0
+    def update(self, delta: float) -> None:
+        speed = (0.5 if self._slowed else 1.0) * 250.0
         move = self._directions * speed
         if move[0] != 0 and move[1] != 0:
-            move = move / SQRT2
-        self._position += move
+            move /= SQRT2
+
+        self._position += move * delta
         self.rect.x = self._position[0]
         self.rect.y = self._position[1]
 
+    @override
+    def physics_update(self) -> None:
         if self._invencibility % 2:
             self.image = self._blink
         else:
@@ -53,6 +60,7 @@ class SoulSprite(pygame.sprite.Sprite):
         if self._invencibility > 0:
             self._invencibility = self._invencibility - 1
 
+    @override
     def event(self, event: pygame.Event) -> None:
         if event.type in (pygame.KEYDOWN, pygame.KEYUP):
             self._slowed = event.mod & pygame.KMOD_SHIFT  # pyright: ignore[reportAny]
@@ -76,11 +84,9 @@ class SoulSprite(pygame.sprite.Sprite):
                 if key == pygame.K_RIGHT:
                     self._directions[0] -= 1
 
-    def collision(self, sprite: pygame.sprite.Sprite) -> None:
+    def collision(self, sprite: BulletSprite) -> None:
         if sprite.rect and self._invencibility == 0:
-            area = ((sprite.rect.w) * (sprite.rect.h)) / 700
-            print(area)
-            self.health -= int(20 - area)
+            self.health -= sprite.damage
             self._invencibility = 20
             _ = self._hurt.play()
 

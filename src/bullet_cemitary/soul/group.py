@@ -1,6 +1,5 @@
-import pygame
-
+from bullet_cemitary.engine.sprite import GroupSingle
 from bullet_cemitary.soul.sprite import SoulSprite
 
 
-class SoulGroup(pygame.sprite.GroupSingle[SoulSprite]): ...
+class SoulGroup(GroupSingle[SoulSprite]): ...

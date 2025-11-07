@@ -1,6 +1,5 @@
-import pygame
-
 from bullet_cemitary.bullets.sprite import BulletSprite
+from bullet_cemitary.engine.sprite import Group
 
 
-class BulletGroup(pygame.sprite.Group[BulletSprite]): ...
+class BulletGroup(Group[BulletSprite]): ...
